@@ -50,14 +50,13 @@ const getSingleBook = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-/*
 const updateBook = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const token = req.headers.authorization;
+  const user = req.user;
   const updatedData = req.body;
-
-  const result = await BookService.updateBook(id, updatedData, token as string);
-
+  
+  const result = await BookService.updateBook(id, updatedData, user);
+  
   sendResponse<IBook>(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -68,8 +67,8 @@ const updateBook = catchAsync(async (req: Request, res: Response) => {
 
 const deleteBook = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const token = req.headers.authorization;
-  const result = await BookService.deleteBook(id, token as string);
+  const user = req.user;
+  const result = await BookService.deleteBook(id, user);
 
   sendResponse<IBook>(res, {
     success: true,
@@ -78,11 +77,10 @@ const deleteBook = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-*/
 export const BookController = {
   createBook,
   getAllBooks,
   getSingleBook,
-  // updateBook,
-  // deleteBook,
+  updateBook,
+  deleteBook,
 };

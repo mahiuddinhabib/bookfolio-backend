@@ -16,17 +16,15 @@ router.get('/', BookController.getAllBooks);
 
 router.get('/:id', auth(), BookController.getSingleBook);
 
-/*
 router.patch(
   '/:id',
-  auth(USER_ROLE.SELLER),
+  auth(),
   validateRequest(BookValidation.updateBookZodSchema),
   BookController.updateBook
 );
 
 router.delete('/:id',
-auth(USER_ROLE.SELLER),
+auth(),
 BookController.deleteBook);
 
-*/
 export const BookRoutes = router;

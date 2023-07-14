@@ -1,12 +1,13 @@
+import httpStatus from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
 import { SortOrder } from 'mongoose';
+import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { bookSearchableFields } from './book.constant';
 import { IBook, IBookFilters } from './book.interface';
 import { Book } from './book.model';
-import ApiError from '../../../errors/ApiError';
-import httpStatus from 'http-status';
 
 const createBook = async (payload: IBook): Promise<IBook> => {
   const result = (await Book.create(payload)).populate('owner');
@@ -16,7 +17,7 @@ const createBook = async (payload: IBook): Promise<IBook> => {
 const getAllBooks = async (
   filters: IBookFilters,
   paginationOptions: IPaginationOptions
-  ): Promise<IGenericResponse<IBook[]>> => {
+): Promise<IGenericResponse<IBook[]>> => {
   const { searchTerm, ...filtersData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
@@ -76,57 +77,50 @@ const getSingleBook = async (id: string): Promise<IBook | null> => {
   return result;
 };
 
-/* 
 const updateBook = async (
   id: string,
   payload: Partial<IBook>,
-  token: string
+  user: JwtPayload | null
 ): Promise<IBook | null> => {
   const isExist = await Book.findOne({ _id: id });
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Book not found !');
   }
 
-  //checking the right seller
-  const verifiedUser = jwtHelpers.verifyToken(
-    token,
-    config.jwt.secret as Secret
-  );
-
-  if (verifiedUser._id !== isExist.seller.toString()) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'This is not your cow!');
+  //checking the right owner
+  if (user?._id !== isExist.owner.toString()) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'This is not your book!');
   }
 
   const result = await Book.findOneAndUpdate({ _id: id }, payload, {
     new: true,
-  }).populate('seller');
+  }).populate('owner');
   return result;
 };
 
-const deleteBook = async (id: string, token: string): Promise<IBook | null> => {
+
+const deleteBook = async (
+  id: string,
+  user: JwtPayload | null
+): Promise<IBook | null> => {
   const isExist = await Book.findOne({ _id: id });
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Book not found');
   }
 
-  //checking the right seller
-  const verifiedUser = jwtHelpers.verifyToken(
-    token,
-    config.jwt.secret as Secret
-  );
-
-  if (verifiedUser._id !== isExist.seller.toString()) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'This is not your cow!');
+  //checking the right owner
+  if (user?._id !== isExist.owner.toString()) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'This is not your book!');
   }
 
-  const result = await Book.findByIdAndDelete(id).populate('seller');
+  const result = await Book.findByIdAndDelete(id).populate('owner');
   return result;
 };
- */
+
 export const BookService = {
   createBook,
   getAllBooks,
   getSingleBook,
-  // updateBook,
-  // deleteBook,
+  updateBook,
+  deleteBook,
 };
