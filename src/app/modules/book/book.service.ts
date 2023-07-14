@@ -5,6 +5,8 @@ import { IPaginationOptions } from '../../../interfaces/pagination';
 import { bookSearchableFields } from './book.constant';
 import { IBook, IBookFilters } from './book.interface';
 import { Book } from './book.model';
+import ApiError from '../../../errors/ApiError';
+import httpStatus from 'http-status';
 
 const createBook = async (payload: IBook): Promise<IBook> => {
   const result = (await Book.create(payload)).populate('owner');
@@ -66,15 +68,15 @@ const getAllBooks = async (
   };
 };
 
-/* 
 const getSingleBook = async (id: string): Promise<IBook | null> => {
-  const result = await Book.findById(id).populate('seller');
+  const result = await Book.findById(id).populate('owner');
   if (!result) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Book not found');
   }
   return result;
 };
 
+/* 
 const updateBook = async (
   id: string,
   payload: Partial<IBook>,
@@ -124,7 +126,7 @@ const deleteBook = async (id: string, token: string): Promise<IBook | null> => {
 export const BookService = {
   createBook,
   getAllBooks,
-  // getSingleBook,
+  getSingleBook,
   // updateBook,
   // deleteBook,
 };

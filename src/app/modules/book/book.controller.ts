@@ -38,11 +38,10 @@ const getAllBooks = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-/*
 const getSingleBook = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await BookService.getSingleBook(id);
-
+  const result = await BookService.getSingleBook(id)
+  
   sendResponse<IBook>(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -51,6 +50,7 @@ const getSingleBook = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+/*
 const updateBook = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const token = req.headers.authorization;
@@ -82,7 +82,7 @@ const deleteBook = catchAsync(async (req: Request, res: Response) => {
 export const BookController = {
   createBook,
   getAllBooks,
-  // getSingleBook,
+  getSingleBook,
   // updateBook,
   // deleteBook,
 };
