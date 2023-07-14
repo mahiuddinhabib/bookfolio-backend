@@ -11,11 +11,10 @@ export const bookGenre: IBookGenre[] = [
   'fiction',
 ];
 
-export const cowSearchableFields = ['location', 'breed', 'category'];
+export const bookSearchableFields = ['title', 'author', 'genre'];
 
-export const cowFilterableFields = [
+export const bookFilterableFields = [
   'searchTerm',
-  'location',
-  'minPrice',
-  'maxPrice',
+  'genre',
+  'publicationDate',
 ];

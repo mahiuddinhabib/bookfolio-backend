@@ -12,13 +12,12 @@ router.post(
   BookController.createBook
 );
 
-/*
 router.get(
   '/',
-  auth(USER_ROLE.BUYER, USER_ROLE.SELLER, USER_ROLE.ADMIN),
-  CowController.getAllCows
-);
+  BookController.getAllBooks
+  );
 
+/*
 router.get(
   '/:id',
   auth(USER_ROLE.BUYER, USER_ROLE.SELLER, USER_ROLE.ADMIN),

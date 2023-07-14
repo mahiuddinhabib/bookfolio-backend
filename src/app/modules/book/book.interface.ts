@@ -27,10 +27,9 @@ export type IBook = {
 
 export type BookModel = Model<IBook, Record<string, unknown>>;
 
-/* export type IBookFilters = {
+export type IBookFilters = {
   searchTerm?: string;
-  location?: string;
-  minPrice?: number;
-  maxPrice?: number;
+  genre?: string;
+  publicationDate?: string;
 };
- */
+

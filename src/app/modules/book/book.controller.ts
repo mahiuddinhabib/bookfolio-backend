@@ -1,14 +1,13 @@
 import { Request, Response } from 'express';
 import { RequestHandler } from 'express-serve-static-core';
 import httpStatus from 'http-status';
-// import { paginationFields } from '../../../constants/pagination';
+import { paginationFields } from '../../../constants/pagination';
 import catchAsync from '../../../shared/catchAsync';
-// import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-// import { cowFilterableFields } from './cow.constant';
-// import { ICow } from './book.interface';
 import { BookService } from './book.service';
 import { IBook } from './book.interface';
+import pick from '../../../shared/pick';
+import { bookFilterableFields } from './book.constant';
 
 const createBook: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
@@ -24,66 +23,66 @@ const createBook: RequestHandler = catchAsync(
   }
 );
 
-/*
-const getAllCows = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, cowFilterableFields);
+const getAllBooks = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, bookFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
+  
+  const result = await BookService.getAllBooks(filters, paginationOptions);
 
-  const result = await CowService.getAllCows(filters, paginationOptions);
-
-  sendResponse<ICow[]>(res, {
+  sendResponse<IBook[]>(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Cows retrieved successfully',
+    message: 'Books retrieved successfully',
     meta: result.meta,
     data: result.data,
   });
 });
 
-const getSingleCow = catchAsync(async (req: Request, res: Response) => {
+/*
+const getSingleBook = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await CowService.getSingleCow(id);
+  const result = await BookService.getSingleBook(id);
 
-  sendResponse<ICow>(res, {
+  sendResponse<IBook>(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Cow retrieved successfully',
+    message: 'Book retrieved successfully',
     data: result,
   });
 });
 
-const updateCow = catchAsync(async (req: Request, res: Response) => {
+const updateBook = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const token = req.headers.authorization;
   const updatedData = req.body;
 
-  const result = await CowService.updateCow(id, updatedData, token as string);
+  const result = await BookService.updateBook(id, updatedData, token as string);
 
-  sendResponse<ICow>(res, {
+  sendResponse<IBook>(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Cow updated successfully',
+    message: 'Book updated successfully',
     data: result,
   });
 });
 
-const deleteCow = catchAsync(async (req: Request, res: Response) => {
+const deleteBook = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const token = req.headers.authorization;
-  const result = await CowService.deleteCow(id, token as string);
+  const result = await BookService.deleteBook(id, token as string);
 
-  sendResponse<ICow>(res, {
+  sendResponse<IBook>(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Cow deleted successfully',
+    message: 'Book deleted successfully',
     data: result,
   });
 });
 */
 export const BookController = {
   createBook,
-  // getAllCows,
-  // getSingleCow,
-  // updateCow,
-  // deleteCow,
+  getAllBooks,
+  // getSingleBook,
+  // updateBook,
+  // deleteBook,
 };
