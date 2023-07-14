@@ -3,10 +3,8 @@ node_modules
 
 #temporary
 admin
-auth
 cow
 order
-user
 routes
 index.d.ts
 README.md
