@@ -19,6 +19,10 @@ const getAllBooks = async (
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IBook[]>> => {
   const { searchTerm, ...filtersData } = filters;
+
+  const count = await Book.countDocuments();
+
+  if (!paginationOptions.limit) paginationOptions.limit = count;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -56,8 +60,6 @@ const getAllBooks = async (
     .skip(skip)
     .limit(limit)
     .populate('owner');
-
-  const count = await Book.countDocuments();
 
   return {
     meta: {
@@ -98,7 +100,6 @@ const updateBook = async (
   return result;
 };
 
-
 const deleteBook = async (
   id: string,
   user: JwtPayload | null
@@ -117,14 +118,16 @@ const deleteBook = async (
   return result;
 };
 
-const createReview = async (payload: IBookReview, bookId: string): Promise<IBook |null> => {
-  const {reviewer, review} = payload
+const createReview = async (
+  payload: IBookReview,
+  bookId: string
+): Promise<IBook | null> => {
+  const { reviewer, review } = payload;
   const result = await Book.findByIdAndUpdate(
     bookId,
     { $push: { reviews: { reviewer, review } } },
     { new: true }
-  )
-    .populate('owner')
+  ).populate('owner');
   return result;
 };
 
@@ -134,5 +137,5 @@ export const BookService = {
   getSingleBook,
   updateBook,
   deleteBook,
-  createReview
+  createReview,
 };
