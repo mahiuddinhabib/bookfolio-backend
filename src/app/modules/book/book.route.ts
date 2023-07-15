@@ -12,6 +12,13 @@ router.post(
   BookController.createBook
 );
 
+router.post(
+  '/reviews/:id',
+  auth(),
+  validateRequest(BookValidation.createReviewZodSchema),
+  BookController.createReview
+);
+
 router.get('/', BookController.getAllBooks);
 
 router.get('/:id', auth(), BookController.getSingleBook);

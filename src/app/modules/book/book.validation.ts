@@ -2,17 +2,21 @@ import { z } from 'zod';
 import { bookGenre } from './book.constant';
 
 const createReviewZodSchema = z.object({
-  reviewer: z.string({
-    required_error: 'Reviewer is required',
-  }),
-  review: z.string({
-    required_error: 'Drop a review',
+  body: z.object({
+    reviewer: z.string({
+      required_error: 'Reviewer is required',
+    }),
+    review: z.string({
+      required_error: 'Drop a review',
+    }),
   }),
 });
 
 const updateReviewZodSchema = z.object({
-  reviewer: z.string().optional(),
-  review: z.string().optional(),
+  body: z.object({
+    reviewer: z.string().optional(),
+    review: z.string().optional(),
+  }),
 });
 
 const createBookZodSchema = z.object({
@@ -29,7 +33,18 @@ const createBookZodSchema = z.object({
     publicationDate: z.string({
       required_error: 'Date is required',
     }),
-    reviews: z.array(createReviewZodSchema).optional(),
+    reviews: z
+      .array(
+        z.object({
+          reviewer: z.string({
+            required_error: 'Reviewer is required',
+          }),
+          review: z.string({
+            required_error: 'Drop a review',
+          }),
+        })
+      )
+      .optional(),
     owner: z.string({
       required_error: 'Owner is required',
     }),
@@ -42,7 +57,14 @@ const updateBookZodSchema = z.object({
     author: z.string().optional(),
     genre: z.enum([...bookGenre] as [string, ...string[]]).optional(),
     publicationDate: z.string().optional(),
-    reviews: z.array(updateReviewZodSchema).optional(),
+    reviews: z
+      .array(
+        z.object({
+          reviewer: z.string().optional(),
+          review: z.string().optional(),
+        })
+      )
+      .optional(),
     owner: z.string().optional(),
   }),
 });
@@ -50,4 +72,6 @@ const updateBookZodSchema = z.object({
 export const BookValidation = {
   createBookZodSchema,
   updateBookZodSchema,
+  createReviewZodSchema,
+  updateReviewZodSchema,
 };

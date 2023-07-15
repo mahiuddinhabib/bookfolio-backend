@@ -6,7 +6,7 @@ import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { bookSearchableFields } from './book.constant';
-import { IBook, IBookFilters } from './book.interface';
+import { IBook, IBookFilters, IBookReview } from './book.interface';
 import { Book } from './book.model';
 
 const createBook = async (payload: IBook): Promise<IBook> => {
@@ -117,10 +117,22 @@ const deleteBook = async (
   return result;
 };
 
+const createReview = async (payload: IBookReview, bookId: string): Promise<IBook |null> => {
+  const {reviewer, review} = payload
+  const result = await Book.findByIdAndUpdate(
+    bookId,
+    { $push: { reviews: { reviewer, review } } },
+    { new: true }
+  )
+    .populate('owner')
+  return result;
+};
+
 export const BookService = {
   createBook,
   getAllBooks,
   getSingleBook,
   updateBook,
   deleteBook,
+  createReview
 };
