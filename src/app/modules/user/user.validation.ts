@@ -11,6 +11,30 @@ const updateUserZodSchema = z.object({
   }),
 });
 
+const addToWishListZodSchema = z.object({
+  body: z.object({
+    user: z.string({
+      required_error: 'User is required',
+    }),
+    book: z.string({
+      required_error: 'Book is required',
+    }),
+  }),
+});
+
+const addToReadZodSchema = z.object({
+  body: z.object({
+    user: z.string({
+      required_error: 'User is required',
+    }),
+    book: z.string({
+      required_error: 'Book is required',
+    }),
+  }),
+});
+
 export const UserValidation = {
   updateUserZodSchema,
+  addToWishListZodSchema,
+  addToReadZodSchema,
 };

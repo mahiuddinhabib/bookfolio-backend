@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
-import { IUser } from './user.interface';
+import { IBookToRead, IUser } from './user.interface';
 import { UserService } from './user.service';
+import { IBook } from '../book/book.interface';
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const result = await UserService.getAllUsers();
@@ -54,31 +55,26 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getMyProfile = catchAsync(async (req: Request, res: Response) => {
-  const token = req.headers.authorization;
-  const result = await UserService.getMyProfile(token as string);
+const addToWishList = catchAsync(async (req: Request, res: Response) => {
+  const {user, book} = req.body;
+  const result = await UserService.addToWishList(user, book);
 
-  sendResponse<IUser>(res, {
+  sendResponse<IBook[]>(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: "User's information retrieved successfully",
+    message: 'Book added to wish list successfully',
     data: result,
   });
 });
 
-const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
-  const token = req.headers.authorization;
-  const updatedData = req.body;
+const addToRead = catchAsync(async (req: Request, res: Response) => {
+  const { user, book } = req.body;
+  const result = await UserService.addToRead(user, book);
 
-  const result = await UserService.updateMyProfile(
-    token as string,
-    updatedData
-  );
-
-  sendResponse<IUser>(res, {
+  sendResponse<IBookToRead[] | undefined>(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: "User's information updated successfully",
+    message: 'Book added to toRead list successfully',
     data: result,
   });
 });
@@ -88,6 +84,6 @@ export const UserController = {
   getSingleUser,
   updateUser,
   deleteUser,
-  getMyProfile,
-  updateMyProfile,
+  addToWishList,
+  addToRead,
 };

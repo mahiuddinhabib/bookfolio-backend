@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
-import { IUser } from './user.interface';
 import { User } from './user.model';
+import { IBook } from '../book/book.interface';
+import { IBookToRead, IUser } from './user.interface';
 
 const getAllUsers = async (): Promise<IUser[] | []> => {
   const result = await User.find({});
@@ -54,9 +55,39 @@ const deleteUser = async (id: string): Promise<IUser | null> => {
   return result;
 };
 
+const addToWishList = async (
+  userId: string,
+  bookId: string
+): Promise<IBook[] | null> => {
+  
+  const result = await User.findByIdAndUpdate(
+      userId,
+      { $push: { wishList: bookId } },
+      { new: true }
+    ).populate('wishList');
+
+  const wishList = result?.wishList as IBook[];
+  return wishList;
+};
+
+const addToRead = async (
+  userId: string,
+  bookId: string
+): Promise<IBookToRead[] | undefined> => {
+  const result = await User.findByIdAndUpdate(
+    userId,
+    { $push: { toRead: { book: bookId, isFinished: false } } },
+    { new: true }
+  );
+  const toRead = result?.toRead
+  return toRead;
+};
+
 export const UserService = {
   getAllUsers,
   getSingleUser,
   updateUser,
   deleteUser,
+  addToWishList,
+  addToRead,
 };

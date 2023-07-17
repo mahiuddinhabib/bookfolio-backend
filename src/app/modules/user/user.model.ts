@@ -1,7 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import config from '../../../config';
-import { IUser, UserModel } from './user.interface';
+import { IBookToRead, IUser, UserModel } from './user.interface';
+
+const toReadSchema = new Schema<IBookToRead>({
+  book: {
+    type: Schema.Types.ObjectId,
+    ref: 'Book',
+    required: true,
+  },
+  isFinished: {
+    type: Boolean,
+    required: true,
+  },
+});
 
 export const UserSchema = new Schema<IUser, UserModel>(
   {
@@ -26,6 +39,15 @@ export const UserSchema = new Schema<IUser, UserModel>(
       type: String,
       required: true,
       select: 0,
+    },
+    wishList: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Book',
+      },
+    ],
+    toRead: {
+      type: [toReadSchema],
     },
   },
   {

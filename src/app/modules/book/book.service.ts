@@ -39,9 +39,19 @@ const getAllBooks = async (
     });
   }
 
-  if (Object.keys(filtersData).length) {
+  const filteredData = Object.entries(filtersData).reduce(
+    (acc: Record<string, string>, [key, value]) => {
+      if (value) {
+        acc[key] = value;
+      }
+      return acc;
+    },
+    {}
+  );
+
+  if (Object.keys(filtersData).length && Object.keys(filteredData).length) {
     andConditions.push({
-      $and: Object.entries(filtersData).map(([field, value]) => ({
+      $and: Object.entries(filteredData).map(([field, value]) => ({
         [field]: value,
       })),
     });
