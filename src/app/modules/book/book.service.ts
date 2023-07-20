@@ -82,7 +82,10 @@ const getAllBooks = async (
 };
 
 const getSingleBook = async (id: string): Promise<IBook | null> => {
-  const result = await Book.findById(id).populate('owner');
+  const result = await Book.findById(id).populate('owner').populate({
+    path: 'reviews.reviewer',
+    model: 'User',
+  });
   if (!result) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Book not found');
   }

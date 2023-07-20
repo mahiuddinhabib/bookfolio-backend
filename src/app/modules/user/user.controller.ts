@@ -67,6 +67,18 @@ const addToWishList = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getWishlist = catchAsync(async (req: Request, res: Response) => {
+  const { user } = req.body;
+  const result = await UserService.getWishlist(user);
+
+  sendResponse<IBook[]>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Wishlist retrieved successfully',
+    data: result,
+  });
+});
+
 const addToRead = catchAsync(async (req: Request, res: Response) => {
   const { user, book } = req.body;
   const result = await UserService.addToRead(user, book);
@@ -79,6 +91,31 @@ const addToRead = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateIsFinished = catchAsync(async (req: Request, res: Response) => {
+  const { user, book } = req.body;
+
+  const result = await UserService.updateIsFinished(user, book);
+
+  sendResponse<IBookToRead>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'isFinished updated successfully',
+    data: result,
+  });
+});
+
+const getToRead = catchAsync(async (req: Request, res: Response) => {
+  const { user } = req.body;
+  const result = await UserService.getToRead(user);
+
+  sendResponse<IBookToRead[] | undefined>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'To read retrieved successfully',
+    data: result,
+  });
+});
+
 export const UserController = {
   getAllUsers,
   getSingleUser,
@@ -86,4 +123,7 @@ export const UserController = {
   deleteUser,
   addToWishList,
   addToRead,
+  getWishlist,
+  getToRead,
+  updateIsFinished,
 };

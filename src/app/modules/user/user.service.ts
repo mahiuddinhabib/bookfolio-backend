@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
-import { User } from './user.model';
 import { IBook } from '../book/book.interface';
 import { IBookToRead, IUser } from './user.interface';
+import { User } from './user.model';
 
 const getAllUsers = async (): Promise<IUser[] | []> => {
   const result = await User.find({});
@@ -59,13 +59,21 @@ const addToWishList = async (
   userId: string,
   bookId: string
 ): Promise<IBook[] | null> => {
-  
   const result = await User.findByIdAndUpdate(
-      userId,
-      { $push: { wishList: bookId } },
-      { new: true }
-    ).populate('wishList');
+    userId,
+    { $push: { wishList: bookId } },
+    { new: true }
+  ).populate('wishList');
 
+  const wishList = result?.wishList as IBook[];
+  return wishList;
+};
+
+const getWishlist = async (userId: string): Promise<IBook[] | null> => {
+  const result = await User.findById(userId).populate('wishList');
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
   const wishList = result?.wishList as IBook[];
   return wishList;
 };
@@ -79,7 +87,45 @@ const addToRead = async (
     { $push: { toRead: { book: bookId, isFinished: false } } },
     { new: true }
   );
-  const toRead = result?.toRead
+  const toRead = result?.toRead;
+  return toRead;
+};
+
+const updateIsFinished = async (
+  userId: string,
+  bookId: string
+): Promise<IBookToRead | undefined> => {
+  const isExist = await User.findOne({ _id: userId });
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found !');
+  }
+
+  const updatedUser = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      toRead: { $elemMatch: { book: bookId } },
+    },
+    { $set: { 'toRead.$.isFinished': false } },
+    {
+      new: true,
+    }
+  );
+
+  const toReadItem = updatedUser?.toRead?.find(
+    item => item.book.toString() === bookId
+  );
+  return toReadItem;
+};
+
+const getToRead = async (
+  userId: string
+): Promise<IBookToRead[] | undefined> => {
+  const result = await User.findById(userId).populate('toRead.book');
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  const toRead = result?.toRead;
   return toRead;
 };
 
@@ -90,4 +136,7 @@ export const UserService = {
   deleteUser,
   addToWishList,
   addToRead,
+  getWishlist,
+  getToRead,
+  updateIsFinished,
 };

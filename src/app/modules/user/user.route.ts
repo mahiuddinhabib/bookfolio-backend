@@ -5,16 +5,6 @@ import { UserController } from './user.controller';
 import { UserValidation } from './user.validation';
 const router = express.Router();
 
-router.get('/:id', UserController.getSingleUser);
-
-router.patch(
-  '/:id',
-  validateRequest(UserValidation.updateUserZodSchema),
-  UserController.updateUser
-);
-
-router.delete('/:id', UserController.deleteUser);
-
 router.get('/', UserController.getAllUsers);
 
 router.post(
@@ -24,11 +14,22 @@ router.post(
   UserController.addToWishList
 );
 
-router.post(
-  '/to-read',
-  auth(),
-  validateRequest(UserValidation.addToReadZodSchema),
-  UserController.addToRead
+router.get('/wish-list', auth(), UserController.getWishlist);
+
+router.post('/to-read', auth(), UserController.addToRead);
+
+router.patch('/to-read', auth(), UserController.updateIsFinished);
+
+router.get('/to-read', auth(), UserController.getToRead);
+
+router.get('/:id', UserController.getSingleUser);
+
+router.patch(
+  '/:id',
+  validateRequest(UserValidation.updateUserZodSchema),
+  UserController.updateUser
 );
+
+router.delete('/:id', UserController.deleteUser);
 
 export const UserRoutes = router;
