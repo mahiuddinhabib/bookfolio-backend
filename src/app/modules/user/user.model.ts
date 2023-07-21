@@ -9,6 +9,7 @@ const toReadSchema = new Schema<IBookToRead>({
     type: Schema.Types.ObjectId,
     ref: 'Book',
     required: true,
+    unique: true,
   },
   isFinished: {
     type: Boolean,
@@ -44,6 +45,7 @@ export const UserSchema = new Schema<IUser, UserModel>(
       {
         type: Schema.Types.ObjectId,
         ref: 'Book',
+        unique: true,
       },
     ],
     toRead: {

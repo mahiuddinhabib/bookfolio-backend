@@ -52,11 +52,10 @@ const getSingleBook = catchAsync(async (req: Request, res: Response) => {
 
 const updateBook = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const user = req.user;
   const updatedData = req.body;
-  console.log(updatedData);
+  // console.log(updatedData);
   
-  const result = await BookService.updateBook(id, updatedData, user);
+  const result = await BookService.updateBook(id, updatedData);
   
   sendResponse<IBook>(res, {
     success: true,
@@ -68,8 +67,7 @@ const updateBook = catchAsync(async (req: Request, res: Response) => {
 
 const deleteBook = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const user = req.user;
-  const result = await BookService.deleteBook(id, user);
+  const result = await BookService.deleteBook(id);
 
   sendResponse<IBook>(res, {
     success: true,
@@ -83,7 +81,6 @@ const createReview: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const reviewData = req.body;
-    console.log(reviewData);
     const result = await BookService.createReview(reviewData, id);
 
     sendResponse<IBook>(res, {

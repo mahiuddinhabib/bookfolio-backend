@@ -106,7 +106,7 @@ const updateIsFinished = async (
       _id: userId,
       toRead: { $elemMatch: { book: bookId } },
     },
-    { $set: { 'toRead.$.isFinished': false } },
+    { $set: { 'toRead.$.isFinished': true } },
     {
       new: true,
     }

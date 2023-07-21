@@ -68,8 +68,8 @@ const addToWishList = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getWishlist = catchAsync(async (req: Request, res: Response) => {
-  const { user } = req.body;
-  const result = await UserService.getWishlist(user);
+  const { id } = req.params;
+  const result = await UserService.getWishlist(id);
 
   sendResponse<IBook[]>(res, {
     success: true,
@@ -105,8 +105,8 @@ const updateIsFinished = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getToRead = catchAsync(async (req: Request, res: Response) => {
-  const { user } = req.body;
-  const result = await UserService.getToRead(user);
+  const { id } = req.params;
+  const result = await UserService.getToRead(id);
 
   sendResponse<IBookToRead[] | undefined>(res, {
     success: true,

@@ -1,5 +1,4 @@
 import httpStatus from 'http-status';
-import { JwtPayload } from 'jsonwebtoken';
 import { SortOrder } from 'mongoose';
 import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
@@ -94,8 +93,7 @@ const getSingleBook = async (id: string): Promise<IBook | null> => {
 
 const updateBook = async (
   id: string,
-  payload: Partial<IBook>,
-  user: JwtPayload | null
+  payload: Partial<IBook>
 ): Promise<IBook | null> => {
   const isExist = await Book.findOne({ _id: id });
   if (!isExist) {
@@ -103,30 +101,29 @@ const updateBook = async (
   }
 
   //checking the right owner
+  /* 
   if (user?._id !== isExist.owner.toString()) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'This is not your book!');
   }
-
+ */
   const result = await Book.findOneAndUpdate({ _id: id }, payload, {
     new: true,
   }).populate('owner');
   return result;
 };
 
-const deleteBook = async (
-  id: string,
-  user: JwtPayload | null
-): Promise<IBook | null> => {
+const deleteBook = async (id: string): Promise<IBook | null> => {
   const isExist = await Book.findOne({ _id: id });
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Book not found');
   }
 
   //checking the right owner
+  /* 
   if (user?._id !== isExist.owner.toString()) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'This is not your book!');
   }
-
+ */
   const result = await Book.findByIdAndDelete(id).populate('owner');
   return result;
 };

@@ -14,13 +14,13 @@ router.post(
   UserController.addToWishList
 );
 
-router.get('/wish-list', auth(), UserController.getWishlist);
-
 router.post('/to-read', auth(), UserController.addToRead);
 
 router.patch('/to-read', auth(), UserController.updateIsFinished);
 
-router.get('/to-read', auth(), UserController.getToRead);
+router.get('/wish-list/:id', auth(), UserController.getWishlist);
+
+router.get('/to-read/:id', auth(), UserController.getToRead);
 
 router.get('/:id', UserController.getSingleUser);
 
